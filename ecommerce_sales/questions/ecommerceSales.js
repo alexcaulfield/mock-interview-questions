@@ -443,3 +443,26 @@ function top3ProductsWithReturns(maxDaysAgo, transactions) {
 }
 
 top3ProductsWithReturns(maxDaysAgo, transactionsWithReturns);
+
+console.log("--------------------------------");
+
+/**
+ * ----------------------------------------------------------------------------
+ * PART 3: Best 14-Day Range for a Single Product
+ * ----------------------------------------------------------------------------
+ * Looking across the entire `transactionsWithReturns` dataset (not just the
+ * most recent two weeks), what is the 14-day range with the highest-selling
+ * product, period?
+ *
+ * Output the 14-day range, the product ID, and its net revenue during that period.
+ *
+ * | 14-Day Range (Days Ago) | Product ID | Net Revenue |
+ * | ----------------------- | ---------- | ----------- |
+ * | 1 - 14                  | P001       | $100.00     |
+ */
+
+function highestSellingProductWindow(windowSize, transactions) {
+  // Implement your solution here
+}
+
+highestSellingProductWindow(maxDaysAgo, transactionsWithReturns);
