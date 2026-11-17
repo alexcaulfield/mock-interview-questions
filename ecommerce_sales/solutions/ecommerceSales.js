@@ -6,7 +6,7 @@
  * PART 1: Top 3 Highest-Selling Products (Last 14 Days)
  * ----------------------------------------------------------------------------
  * Given a list of `transactions`, find the top 3 highest-selling products
- * by total `purchase_amount` within the last two weeks (`days_ago <= 14`).
+ * by total `purchase_amount` within the last two weeks.
  *
  * Each transaction object has the following shape:
  * {
@@ -30,7 +30,7 @@
  * | P003       | $25.00                |
  */
 
-const maxDaysAgo = 14; // Threshold for "last two weeks" (days_ago <= 14)
+const maxDaysAgo = 14; // Threshold for "last two weeks"
 
 const transactions = [
   {
@@ -275,8 +275,7 @@ top3Products(maxDaysAgo, transactions);
  * ----------------------------------------------------------------------------
  * What happens if we include returns in the data set?
  * Each transaction now includes a `refund_amount` field.
- * Recalculate the top 3 highest net-revenue products in the last two weeks
- * (`days_ago <= 14`), where net revenue is `purchase_amount` minus `refund_amount`.
+ * Recalculate the top 3 highest net-revenue products in the last two weeks.
  *
  * | Product ID | Net Revenue |
  * | ---------- | ----------- |
