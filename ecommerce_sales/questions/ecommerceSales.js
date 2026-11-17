@@ -20,8 +20,7 @@
  *   country: "USA"
  * }
  *
- * Your output should display or return the top 3 products and their totals
- * (exact table formatting is not required — logging or returning an array/object is great!):
+ * Your output should display or return the top 3 products and their totals:
  *
  * | Product ID | Total Purchase Amount |
  * | ---------- | --------------------- |
@@ -30,7 +29,7 @@
  * | P003       | $25.00                |
  */
 
-const maxDaysAgo = 14; // Threshold for "last two weeks"
+const maxDaysAgo = 14;
 
 const transactions = [
   {

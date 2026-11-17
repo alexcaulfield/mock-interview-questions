@@ -20,8 +20,7 @@
  *   country: "USA"
  * }
  *
- * Your output should display or return the top 3 products and their totals
- * (exact table formatting is not required — logging or returning an array/object is great!):
+ * Your output should display or return the top 3 products and their totals:
  *
  * | Product ID | Total Purchase Amount |
  * | ---------- | --------------------- |
@@ -30,7 +29,7 @@
  * | P003       | $25.00                |
  */
 
-const maxDaysAgo = 14; // Threshold for "last two weeks"
+const maxDaysAgo = 14;
 
 const transactions = [
   {
@@ -216,36 +215,33 @@ const transactions = [
 ];
 
 function top3Products(maxDaysAgo, transactions) {
-  // 1. Filter transactions within the last two weeks (days_ago <= maxDaysAgo)
-  const recentTransactions = transactions.filter(
-    (transaction) => transaction.days_ago <= maxDaysAgo
-  );
+  // Filter transactions within the last two weeks
+  const filteredTransactions = transactions.filter(transaction => {
+    return transaction.days_ago <= maxDaysAgo;
+  });
 
-  // 2. Calculate total purchase amount for each product
+  // Calculate total purchase amount for each product
   const productTotals = {};
-  for (const transaction of recentTransactions) {
+  for (const transaction of filteredTransactions) {
     const productId = transaction.product_id;
     const purchaseAmount = transaction.purchase_amount;
     productTotals[productId] = (productTotals[productId] || 0) + purchaseAmount;
   }
 
-  // 3. Sort products by total purchase amount (descending)
-  const sortedProducts = Object.entries(productTotals).sort(
-    (a, b) => b[1] - a[1]
-  );
+  // Sort products by total purchase amount (descending)
+  const sortedProducts = Object.entries(productTotals)
+    .sort((a, b) => b[1] - a[1]);
 
-  // 4. Get the top 3 highest-selling products
-  const top3 = sortedProducts.slice(0, 3);
+  // Get the top 3 highest-selling products
+  const top3Products = sortedProducts.slice(0, 3);
 
-  // 5. Print the results
+  // Print the results
   console.log("Top 3 Highest-Selling Products (Last Two Weeks):");
   console.log("--------------------------------");
   console.log("| Product ID | Total Purchase Amount |");
-  for (const [productId, totalAmount] of top3) {
+  for (const [productId, totalAmount] of top3Products) {
     console.log(`| ${productId}       | $${totalAmount.toFixed(2)}               |`);
   }
-
-  return top3;
 }
 
 top3Products(maxDaysAgo, transactions);
@@ -488,36 +484,34 @@ const transactionsWithReturns = [
 console.log("--------------------------------");
 
 function top3ProductsWithReturns(maxDaysAgo, transactions) {
-  // 1. Filter transactions within the last two weeks (days_ago <= maxDaysAgo)
-  const recentTransactions = transactions.filter(
-    (transaction) => transaction.days_ago <= maxDaysAgo
-  );
+  // Filter transactions within the last two weeks
+  const filteredTransactions = transactions.filter(transaction => {
+    return transaction.days_ago <= maxDaysAgo;
+  });
 
-  // 2. Calculate net revenue for each product (purchase_amount - refund_amount)
+  // Calculate net revenue for each product (purchase_amount - refund_amount)
   const productTotals = {};
-  for (const transaction of recentTransactions) {
+  for (const transaction of filteredTransactions) {
     const productId = transaction.product_id;
-    const netAmount = transaction.purchase_amount - (transaction.refund_amount || 0);
-    productTotals[productId] = (productTotals[productId] || 0) + netAmount;
+    const purchaseAmount = transaction.purchase_amount;
+    const refundAmount = transaction.refund_amount;
+    productTotals[productId] = (productTotals[productId] || 0) + purchaseAmount - refundAmount;
   }
 
-  // 3. Sort products by net revenue (descending)
-  const sortedProducts = Object.entries(productTotals).sort(
-    (a, b) => b[1] - a[1]
-  );
+  // Sort products by net revenue (descending)
+  const sortedProducts = Object.entries(productTotals)
+    .sort((a, b) => b[1] - a[1]);
 
-  // 4. Get the top 3 highest revenue products
-  const top3 = sortedProducts.slice(0, 3);
+  // Get the top 3 highest revenue products
+  const top3Products = sortedProducts.slice(0, 3);
 
-  // 5. Print the results
+  // Print the results
   console.log("Top 3 Highest Revenue Products (Last Two Weeks):");
   console.log("--------------------------------");
   console.log("| Product ID | Net Revenue |");
-  for (const [productId, totalAmount] of top3) {
+  for (const [productId, totalAmount] of top3Products) {
     console.log(`| ${productId}       | $${totalAmount.toFixed(2)}     |`);
   }
-
-  return top3;
 }
 
 top3ProductsWithReturns(maxDaysAgo, transactionsWithReturns);
