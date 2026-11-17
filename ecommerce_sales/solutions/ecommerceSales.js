@@ -534,3 +534,89 @@ top3ProductsWithReturns(maxDaysAgo, transactionsWithReturns);
  * - P009: $139.99
  * - P006: ($149.99 - $20.00) + ($139.99 - $139.99) = $129.99 (drops out of top 3 due to returns!)
  */
+
+console.log("--------------------------------");
+
+/**
+ * ----------------------------------------------------------------------------
+ * PART 3: Best 14-Day Range for a Single Product
+ * ----------------------------------------------------------------------------
+ * Looking across the entire `transactionsWithReturns` dataset (not just the
+ * most recent two weeks), what is the 14-day range with the highest-selling
+ * product, period?
+ *
+ * Output the 14-day range, the product ID, and its net revenue during that period.
+ *
+ * | 14-Day Range (Days Ago) | Product ID | Net Revenue |
+ * | ----------------------- | ---------- | ----------- |
+ * | 1 - 14                  | P001       | $100.00     |
+ */
+
+function highestSellingProductWindow(windowSize, transactions) {
+  // Sort transactions by days_ago ascending
+  const sortedTransactions = [...transactions].sort((a, b) => a.days_ago - b.days_ago);
+
+  const windowTotals = {};
+  let left = 0;
+
+  let bestProduct = null;
+  let bestRevenue = -Infinity;
+  let bestRange = null;
+
+  // Slide the window across sorted transactions using two pointers
+  for (let right = 0; right < sortedTransactions.length; right++) {
+    const incoming = sortedTransactions[right];
+    const incomingId = incoming.product_id;
+    const incomingNet = incoming.purchase_amount - incoming.refund_amount;
+
+    // Add incoming transaction to the current window
+    windowTotals[incomingId] = (windowTotals[incomingId] || 0) + incomingNet;
+
+    // Shrink window from the left while the span exceeds windowSize
+    while (incoming.days_ago - sortedTransactions[left].days_ago > windowSize) {
+      const outgoing = sortedTransactions[left];
+      const outgoingId = outgoing.product_id;
+      const outgoingNet = outgoing.purchase_amount - outgoing.refund_amount;
+
+      windowTotals[outgoingId] -= outgoingNet;
+      left++;
+    }
+
+    // Update best result if the current product's window total is the highest seen
+    if (windowTotals[incomingId] > bestRevenue) {
+      bestRevenue = windowTotals[incomingId];
+      bestProduct = incomingId;
+      const startDay = Math.max(1, incoming.days_ago - windowSize);
+      bestRange = `${startDay} - ${incoming.days_ago}`;
+    }
+  }
+
+  // Print the results
+  console.log("Highest-Selling Product in Any 14-Day Range:");
+  console.log("--------------------------------");
+  console.log("| 14-Day Range (Days Ago) | Product ID | Net Revenue |");
+  console.log(`| ${bestRange.padEnd(23)} | ${bestProduct}       | $${bestRevenue.toFixed(2)}     |`);
+}
+
+highestSellingProductWindow(maxDaysAgo, transactionsWithReturns);
+
+/**
+ * Answer (Part 3):
+ * Highest-Selling Product in Any 14-Day Range:
+ * --------------------------------
+ * | 14-Day Range (Days Ago) | Product ID | Net Revenue |
+ * | 7 - 21                  | P005       | $529.98     |
+ *
+ * Breakdown & Interviewer Notes:
+ * - Winner: P005 with $529.98 net revenue
+ *   - T12364 (days_ago: 10): $259.99 - $30.00 = $229.99
+ *   - T12349 (days_ago: 21): $299.99 - $0.00  = $299.99
+ * - Tied Windows: Any 14-day window that includes both days_ago 10 and 21 is valid:
+ *   - Using `endDay - startDay <= 14`: [7 - 21], [8 - 22], [9 - 23], [10 - 24]
+ *   - Using `endDay - startDay < 14` (14 discrete calendar days): [8 - 21], [9 - 22], [10 - 23]
+ * - Notable Edge Case (P001):
+ *   - P001 has $589.97 in total all-time net revenue ($189.99 on day 1 + $399.98 on day 16),
+ *     but days_ago 1 and 16 are 15 days apart, so they cannot fit in the same 14-day window.
+ * - Runner-up in a 14-day window:
+ *   - P003: $489.98 ($239.99 on day 24 + $249.99 on day 26; the other day 26 order was fully refunded)
+ */
